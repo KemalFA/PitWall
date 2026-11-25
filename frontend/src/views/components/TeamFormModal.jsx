@@ -8,6 +8,8 @@ const emptyForm = {
   power_unit: '',
   driver_1: '',
   driver_2: '',
+  driver_1_points: 0,
+  driver_2_points: 0,
   points: 0,
   championships: 0,
   accent_color: '#E10600',
@@ -25,6 +27,8 @@ export function TeamFormModal({ initialData, onClose, onSubmit }) {
           power_unit: initialData.power_unit || '',
           driver_1: initialData.driver_1 || '',
           driver_2: initialData.driver_2 || '',
+          driver_1_points: initialData.driver_1_points ?? 0,
+          driver_2_points: initialData.driver_2_points ?? 0,
           points: initialData.points ?? 0,
           championships: initialData.championships ?? 0,
           accent_color: initialData.accent_color || '#E10600',
@@ -37,7 +41,15 @@ export function TeamFormModal({ initialData, onClose, onSubmit }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => {
+      const next = { ...prev, [name]: value };
+      if (name === 'driver_1_points' || name === 'driver_2_points') {
+        const p1 = Number(name === 'driver_1_points' ? value : prev.driver_1_points) || 0;
+        const p2 = Number(name === 'driver_2_points' ? value : prev.driver_2_points) || 0;
+        next.points = p1 + p2;
+      }
+      return next;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -47,6 +59,8 @@ export function TeamFormModal({ initialData, onClose, onSubmit }) {
     try {
       await onSubmit({
         ...form,
+        driver_1_points: Number(form.driver_1_points) || 0,
+        driver_2_points: Number(form.driver_2_points) || 0,
         points: Number(form.points) || 0,
         championships: Number(form.championships) || 0,
       });
@@ -104,14 +118,25 @@ export function TeamFormModal({ initialData, onClose, onSubmit }) {
               <input id="team-d1" name="driver_1" className="input" value={form.driver_1} onChange={handleChange} required />
             </div>
             <div>
-              <label className="field-label" htmlFor="team-d2">Pembalap 2 *</label>
-              <input id="team-d2" name="driver_2" className="input" value={form.driver_2} onChange={handleChange} required />
+              <label className="field-label" htmlFor="team-d1-pts">Poin Pembalap 1</label>
+              <input id="team-d1-pts" name="driver_1_points" type="number" min="0" className="input" value={form.driver_1_points} onChange={handleChange} />
             </div>
           </div>
 
           <div className="form-grid form-grid--2">
             <div>
-              <label className="field-label" htmlFor="team-points">Poin Konstruktor</label>
+              <label className="field-label" htmlFor="team-d2">Pembalap 2 *</label>
+              <input id="team-d2" name="driver_2" className="input" value={form.driver_2} onChange={handleChange} required />
+            </div>
+            <div>
+              <label className="field-label" htmlFor="team-d2-pts">Poin Pembalap 2</label>
+              <input id="team-d2-pts" name="driver_2_points" type="number" min="0" className="input" value={form.driver_2_points} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="form-grid form-grid--2">
+            <div>
+              <label className="field-label" htmlFor="team-points">Total Poin Konstruktor</label>
               <input id="team-points" name="points" type="number" min="0" className="input" value={form.points} onChange={handleChange} />
             </div>
             <div>

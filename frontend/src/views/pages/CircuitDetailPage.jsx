@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import { CircuitModel } from '../../models/circuitModel';
 import { CircuitFormModal } from '../components/CircuitFormModal';
 import { formatRaceDate } from '../../utils/format';
 
-export function CircuitDetailPage({ circuitId, controller, onNavigate }) {
+export function CircuitDetailPage({ controller }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [circuit, setCircuit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -12,7 +15,7 @@ export function CircuitDetailPage({ circuitId, controller, onNavigate }) {
   useEffect(() => {
     let active = true;
     setLoading(true);
-    CircuitModel.getById(circuitId)
+    CircuitModel.getById(id)
       .then((res) => {
         if (active) setCircuit(res.data);
       })
@@ -22,17 +25,17 @@ export function CircuitDetailPage({ circuitId, controller, onNavigate }) {
     return () => {
       active = false;
     };
-  }, [circuitId]);
+  }, [id]);
 
   const handleUpdate = async (payload) => {
-    const updated = await controller.updateCircuit(circuitId, payload);
+    const updated = await controller.updateCircuit(id, payload);
     setCircuit(updated);
   };
 
   const handleDelete = async () => {
     if (!window.confirm(`Hapus jadwal "${circuit.grand_prix}"?`)) return;
-    await controller.deleteCircuit(circuitId);
-    onNavigate('circuits');
+    await controller.deleteCircuit(id);
+    navigate('/circuits');
   };
 
   if (loading) {
@@ -42,7 +45,7 @@ export function CircuitDetailPage({ circuitId, controller, onNavigate }) {
   if (!circuit) {
     return (
       <div className="stack-md">
-        <button type="button" className="btn" onClick={() => onNavigate('circuits')}>
+        <button type="button" className="btn" onClick={() => navigate('/circuits')}>
           <ArrowLeft size={18} /> Kembali ke Jadwal
         </button>
         <div className="card">Data sirkuit tidak ditemukan.</div>
@@ -55,7 +58,7 @@ export function CircuitDetailPage({ circuitId, controller, onNavigate }) {
   return (
     <section>
       <div className="detail-back">
-        <button type="button" className="btn" onClick={() => onNavigate('circuits')}>
+        <button type="button" className="btn" onClick={() => navigate('/circuits')}>
           <ArrowLeft size={18} /> Kembali
         </button>
       </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Search, ChevronRight } from 'lucide-react';
 import { CircuitFormModal } from '../components/CircuitFormModal';
 import { formatRaceDate } from '../../utils/format';
@@ -11,7 +12,8 @@ function statusBadgeClass(status) {
   return 'badge';
 }
 
-export function CircuitsPage({ controller, onNavigate }) {
+export function CircuitsPage({ controller }) {
+  const navigate = useNavigate();
   const {
     circuits,
     loading,
@@ -75,7 +77,7 @@ export function CircuitsPage({ controller, onNavigate }) {
               key={circuit.id}
               type="button"
               className="list-card"
-              onClick={() => onNavigate('circuit-detail', circuit.id)}
+              onClick={() => navigate(`/circuits/${circuit.id}`)}
             >
               <div className="stack-sm" style={{ minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>

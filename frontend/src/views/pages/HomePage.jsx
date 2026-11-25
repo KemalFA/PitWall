@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { formatRaceDate } from '../../utils/format';
 
-export function HomePage({ teams, circuits, onNavigate }) {
+export function HomePage({ teams, circuits }) {
+  const navigate = useNavigate();
   const nextRace =
     circuits.find((c) => c.status === 'Next') ||
     circuits.find((c) => c.status === 'Scheduled') ||
@@ -36,14 +38,14 @@ export function HomePage({ teams, circuits, onNavigate }) {
         <div>
           <div className="section-heading">
             <span>Balapan Terdekat</span>
-            <button type="button" className="link-btn" onClick={() => onNavigate('circuits')}>
+            <button type="button" className="link-btn" onClick={() => navigate('/circuits')}>
               Semua jadwal <ChevronRight size={16} />
             </button>
           </div>
           <button
             type="button"
             className="list-card"
-            onClick={() => onNavigate('circuit-detail', nextRace.id)}
+            onClick={() => navigate(`/circuits/${nextRace.id}`)}
           >
             <div className="stack-sm" style={{ minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
@@ -66,7 +68,7 @@ export function HomePage({ teams, circuits, onNavigate }) {
       <div>
         <div className="section-heading">
           <span>Klasemen Konstruktor Teratas</span>
-          <button type="button" className="link-btn" onClick={() => onNavigate('teams')}>
+          <button type="button" className="link-btn" onClick={() => navigate('/teams')}>
             Semua tim <ChevronRight size={16} />
           </button>
         </div>
@@ -77,7 +79,7 @@ export function HomePage({ teams, circuits, onNavigate }) {
               key={team.id}
               type="button"
               className="list-card"
-              onClick={() => onNavigate('team-detail', team.id)}
+              onClick={() => navigate(`/teams/${team.id}`)}
             >
               <div className="team-card-lead">
                 <span
@@ -87,8 +89,8 @@ export function HomePage({ teams, circuits, onNavigate }) {
                 />
                 <div>
                   <h3 className="item-title">{team.name}</h3>
-                  <p className="item-meta">
-                    {team.driver_1} &middot; {team.driver_2}
+                  <p className="item-meta tabular">
+                    {team.driver_1} ({team.driver_1_points ?? 0}) &middot; {team.driver_2} ({team.driver_2_points ?? 0})
                   </p>
                 </div>
               </div>

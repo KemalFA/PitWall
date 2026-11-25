@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Search, ChevronRight } from 'lucide-react';
 import { TeamFormModal } from '../components/TeamFormModal';
 
-export function TeamsPage({ controller, onNavigate }) {
+export function TeamsPage({ controller }) {
+  const navigate = useNavigate();
   const { teams, loading, error, search, setSearch, createTeam } = controller;
   const [showCreate, setShowCreate] = useState(false);
 
@@ -45,7 +47,7 @@ export function TeamsPage({ controller, onNavigate }) {
               key={team.id}
               type="button"
               className="list-card"
-              onClick={() => onNavigate('team-detail', team.id)}
+              onClick={() => navigate(`/teams/${team.id}`)}
             >
               <div className="team-card-lead">
                 <span
@@ -55,8 +57,8 @@ export function TeamsPage({ controller, onNavigate }) {
                 />
                 <div>
                   <h2 className="item-title">{team.name}</h2>
-                  <p className="item-meta">
-                    {team.driver_1} &middot; {team.driver_2}
+                  <p className="item-meta tabular">
+                    {team.driver_1} ({team.driver_1_points ?? 0}) &middot; {team.driver_2} ({team.driver_2_points ?? 0})
                   </p>
                   <p className="item-meta">{team.power_unit} Power Unit</p>
                 </div>

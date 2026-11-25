@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react';
 import { TeamModel } from '../../models/teamModel';
 import { TeamFormModal } from '../components/TeamFormModal';
 
-export function TeamDetailPage({ teamId, controller, onNavigate }) {
+export function TeamDetailPage({ controller }) {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -11,7 +14,7 @@ export function TeamDetailPage({ teamId, controller, onNavigate }) {
   useEffect(() => {
     let active = true;
     setLoading(true);
-    TeamModel.getById(teamId)
+    TeamModel.getById(id)
       .then((res) => {
         if (active) setTeam(res.data);
       })
@@ -21,17 +24,17 @@ export function TeamDetailPage({ teamId, controller, onNavigate }) {
     return () => {
       active = false;
     };
-  }, [teamId]);
+  }, [id]);
 
   const handleUpdate = async (payload) => {
-    const updated = await controller.updateTeam(teamId, payload);
+    const updated = await controller.updateTeam(id, payload);
     setTeam(updated);
   };
 
   const handleDelete = async () => {
     if (!window.confirm(`Hapus tim "${team.name}"?`)) return;
-    await controller.deleteTeam(teamId);
-    onNavigate('teams');
+    await controller.deleteTeam(id);
+    navigate('/teams');
   };
 
   if (loading) {
@@ -41,7 +44,7 @@ export function TeamDetailPage({ teamId, controller, onNavigate }) {
   if (!team) {
     return (
       <div className="stack-md">
-        <button type="button" className="btn" onClick={() => onNavigate('teams')}>
+        <button type="button" className="btn" onClick={() => navigate('/teams')}>
           <ArrowLeft size={18} /> Kembali ke Daftar Tim
         </button>
         <div className="card">Data tim tidak ditemukan.</div>
@@ -52,7 +55,7 @@ export function TeamDetailPage({ teamId, controller, onNavigate }) {
   return (
     <section>
       <div className="detail-back">
-        <button type="button" className="btn" onClick={() => onNavigate('teams')}>
+        <button type="button" className="btn" onClick={() => navigate('/teams')}>
           <ArrowLeft size={18} /> Kembali
         </button>
       </div>
@@ -81,10 +84,12 @@ export function TeamDetailPage({ teamId, controller, onNavigate }) {
         <div className="spec-item">
           <p className="spec-label">Pembalap 1</p>
           <p className="spec-value">{team.driver_1}</p>
+          <p className="item-meta tabular">{team.driver_1_points ?? 0} pts</p>
         </div>
         <div className="spec-item">
           <p className="spec-label">Pembalap 2</p>
           <p className="spec-value">{team.driver_2}</p>
+          <p className="item-meta tabular">{team.driver_2_points ?? 0} pts</p>
         </div>
         <div className="spec-item">
           <p className="spec-label">Team Principal</p>
@@ -95,7 +100,7 @@ export function TeamDetailPage({ teamId, controller, onNavigate }) {
           <p className="spec-value">{team.power_unit}</p>
         </div>
         <div className="spec-item">
-          <p className="spec-label">Poin Konstruktor</p>
+          <p className="spec-label">Total Poin Konstruktor</p>
           <p className="spec-value tabular">{team.points} pts</p>
         </div>
         <div className="spec-item">

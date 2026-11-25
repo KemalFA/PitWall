@@ -33,16 +33,22 @@ export const TeamModel = {
       power_unit,
       driver_1,
       driver_2,
-      points = 0,
+      driver_1_points = 0,
+      driver_2_points = 0,
+      points,
       championships = 0,
       accent_color = '#E10600',
       description = '',
     } = data;
 
+    const p1 = Number(driver_1_points) || 0;
+    const p2 = Number(driver_2_points) || 0;
+    const totalPoints = points !== undefined && points !== '' ? Number(points) || 0 : p1 + p2;
+
     const { rows } = await pool.query(
       `INSERT INTO teams
-        (name, base, team_principal, power_unit, driver_1, driver_2, points, championships, accent_color, description)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        (name, base, team_principal, power_unit, driver_1, driver_2, driver_1_points, driver_2_points, points, championships, accent_color, description)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        RETURNING *`,
       [
         name,
@@ -51,7 +57,9 @@ export const TeamModel = {
         power_unit,
         driver_1,
         driver_2,
-        Number(points) || 0,
+        p1,
+        p2,
+        totalPoints,
         Number(championships) || 0,
         accent_color || '#E10600',
         description || '',
@@ -68,11 +76,17 @@ export const TeamModel = {
       power_unit,
       driver_1,
       driver_2,
+      driver_1_points = 0,
+      driver_2_points = 0,
       points,
       championships,
       accent_color,
       description,
     } = data;
+
+    const p1 = Number(driver_1_points) || 0;
+    const p2 = Number(driver_2_points) || 0;
+    const totalPoints = points !== undefined && points !== '' ? Number(points) || 0 : p1 + p2;
 
     const { rows } = await pool.query(
       `UPDATE teams
@@ -82,11 +96,13 @@ export const TeamModel = {
            power_unit = $4,
            driver_1 = $5,
            driver_2 = $6,
-           points = $7,
-           championships = $8,
-           accent_color = $9,
-           description = $10
-       WHERE id = $11
+           driver_1_points = $7,
+           driver_2_points = $8,
+           points = $9,
+           championships = $10,
+           accent_color = $11,
+           description = $12
+       WHERE id = $13
        RETURNING *`,
       [
         name,
@@ -95,7 +111,9 @@ export const TeamModel = {
         power_unit,
         driver_1,
         driver_2,
-        Number(points) || 0,
+        p1,
+        p2,
+        totalPoints,
         Number(championships) || 0,
         accent_color || '#E10600',
         description || '',
