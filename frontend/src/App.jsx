@@ -15,18 +15,10 @@ export default function App() {
   const teamsCtrl = useTeamsController();
   const circuitsCtrl = useCircuitsController();
 
-  const dataSource =
-    teamsCtrl.source === 'api' && circuitsCtrl.source === 'api' ? 'api' : 'local';
-
-  const handleSyncAll = () => {
-    teamsCtrl.refresh();
-    circuitsCtrl.refresh();
-  };
-
   return (
     <BrowserRouter>
       <div className="app-shell">
-        <TopBar dataSource={dataSource} />
+        <TopBar />
         <main className="main-content">
           <Routes>
             <Route
@@ -41,10 +33,7 @@ export default function App() {
             />
             <Route path="/circuits" element={<CircuitsPage controller={circuitsCtrl} />} />
             <Route path="/circuits/:id" element={<CircuitDetailPage controller={circuitsCtrl} />} />
-            <Route
-              path="/profile"
-              element={<ProfilePage dataSource={dataSource} onSync={handleSyncAll} />}
-            />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
