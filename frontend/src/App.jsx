@@ -6,6 +6,7 @@ import { TeamsPage } from './views/pages/TeamsPage';
 import { TeamDetailPage } from './views/pages/TeamDetailPage';
 import { CircuitsPage } from './views/pages/CircuitsPage';
 import { CircuitDetailPage } from './views/pages/CircuitDetailPage';
+import { LeaderboardPage } from './views/pages/LeaderboardPage';
 import { ProfilePage } from './views/pages/ProfilePage';
 import { useTeamsController } from './controllers/useTeamsController';
 import { useCircuitsController } from './controllers/useCircuitsController';
@@ -34,6 +35,10 @@ export default function App() {
             />
             <Route path="/teams" element={<TeamsPage controller={teamsCtrl} />} />
             <Route path="/teams/:id" element={<TeamDetailPage controller={teamsCtrl} />} />
+            <Route
+              path="/leaderboard"
+              element={<LeaderboardPage teams={teamsCtrl.teams} loading={teamsCtrl.loading} />}
+            />
             <Route path="/circuits" element={<CircuitsPage controller={circuitsCtrl} />} />
             <Route path="/circuits/:id" element={<CircuitDetailPage controller={circuitsCtrl} />} />
             <Route

@@ -1,9 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Shield, Flag, User } from 'lucide-react';
+import { Home, Shield, Trophy, Flag, User } from 'lucide-react';
 
 const navItems = [
   { path: '/', label: 'Beranda', Icon: Home },
   { path: '/teams', label: 'Tim', Icon: Shield },
+  { path: '/leaderboard', label: 'Klasemen', Icon: Trophy },
   { path: '/circuits', label: 'Sirkuit', Icon: Flag },
   { path: '/profile', label: 'Profil', Icon: User },
 ];

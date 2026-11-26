@@ -68,8 +68,8 @@ export function HomePage({ teams, circuits }) {
       <div>
         <div className="section-heading">
           <span>Klasemen Konstruktor Teratas</span>
-          <button type="button" className="link-btn" onClick={() => navigate('/teams')}>
-            Semua tim <ChevronRight size={16} />
+          <button type="button" className="link-btn" onClick={() => navigate('/leaderboard')}>
+            Klasemen lengkap <ChevronRight size={16} />
           </button>
         </div>
 
